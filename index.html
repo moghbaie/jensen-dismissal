@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Panel study of 739 US CEO departures: does concentrated leadership amplify the market reaction? Exploratory; both hypotheses inconclusive.">
+<title>Leadership Concentration Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+/* Layout: single reading column (~68ch) with full-width figure plates and scrollable tables */
+:root {
+  --bg: #f7f8fa; --surface: #ffffff; --fg: #1b2230; --muted: #5b6577; --line: #dde2ea;
+  --accent: #2a5fb0; --plate: #fcfcfb;
+  --vol: #1baf7a; --perf: #2a78d6; --mis: #eb6834;
+  --warn-bg: #fff4e5; --warn-fg: #8a4b00; --neutral-bg: #eef1f6; --neutral-fg: #3c4658;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11151c; --surface: #181e27; --fg: #e5e9f0; --muted: #9aa5b8; --line: #2b3442;
+  --accent: #7fb0ff; --plate: #fcfcfb; --warn-bg: #3a2a12; --warn-fg: #ffc37a;
+  --neutral-bg: #232b38; --neutral-fg: #c9d2e0; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #181e27; --fg: #e5e9f0; --muted: #9aa5b8; --line: #2b3442;
+  --accent: #7fb0ff; --plate: #fcfcfb; --warn-bg: #3a2a12; --warn-fg: #ffc37a;
+  --neutral-bg: #232b38; --neutral-fg: #c9d2e0; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 72rem; margin: 0 auto; padding-block: 40px 72px; display: grid; gap: 48px; }
+.col { max-width: 68ch; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.45rem; font-weight: 600; }
+h3 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0; }
+section { display: grid; gap: 16px; }
+.eyebrow { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.12rem; color: var(--fg); }
+.muted { color: var(--muted); }
+header { display: grid; gap: 14px; }
+.status { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { font: 500 0.78rem/1 var(--mono); padding: 6px 10px; border-radius: 999px; background: var(--neutral-bg); color: var(--neutral-fg); }
+.pill.warn { background: var(--warn-bg); color: var(--warn-fg); }
+.verdicts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 10px; min-width: 0; }
+.card .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.big { font: 600 1.9rem/1.1 var(--mono); font-variant-numeric: tabular-nums; }
+.ci { font: 400 0.92rem/1.4 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); }
+.chip::before { content: ""; width: 10px; height: 10px; border-radius: 2px; background: var(--c); }
+ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font: 500 0.75rem/1.2 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+tr:last-child td { border-bottom: 0; }
+figure { margin: 0; display: grid; gap: 8px; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: 10px; padding: 10px; overflow-x: auto; }
+figure img { display: block; width: 100%; height: auto; min-width: 560px; }
+.step { font: 500 0.78rem/1 var(--mono); color: var(--accent); letter-spacing: 0.06em; }
+.sources td { white-space: normal; min-width: 9rem; vertical-align: top; }
+.sources td:first-child { min-width: 8rem; font-weight: 500; }
+.sources code { word-break: break-all; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.9rem; }
+.vars { display: grid; grid-template-columns: minmax(8rem, max-content) 1fr; gap: 4px 14px; margin: 8px 0 0; }
+.vars dt { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
+.vars dd { margin: 0; }
+@media (max-width: 560px) { .vars { grid-template-columns: 1fr; } .vars dd { margin-bottom: 6px; } }
+.tabletitle { font-size: 0.88rem; font-weight: 500; margin: 6px 0 0; }
+.tablenote { font-size: 0.85rem; color: var(--muted); }
+.rows td { white-space: normal; vertical-align: top; }
+.rows td.num { white-space: nowrap; }
+.rows td:nth-child(2) { min-width: 16rem; }
+figcaption { font-size: 0.88rem; color: var(--muted); max-width: 80ch; }
+.funnel { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: minmax(0, 15rem) 1fr auto; gap: 12px; align-items: center; font-size: 0.92rem; }
+.bar .track { height: 10px; background: var(--neutral-bg); border-radius: 3px; overflow: hidden; }
+.bar .fill { height: 100%; background: var(--accent); }
+.bar .n { font-family: var(--mono); font-variant-numeric: tabular-nums; min-width: 4ch; text-align: right; }
+@media (max-width: 560px) { .bar { grid-template-columns: 1fr auto; } .bar .track { grid-column: 1 / -1; grid-row: 2; } }
+.note { border-left: 3px solid var(--line); padding: 4px 0 4px 14px; color: var(--muted); }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+code { font-family: var(--mono); font-size: 0.88em; }
+footer { border-top: 1px solid var(--line); padding-top: 20px; font-size: 0.88rem; color: var(--muted); display: grid; gap: 8px; }
+.small table { font-size: 0.72rem; }
+.small th { font-size: 0.62rem; }
+.small th, .small td { padding: 5px 8px; }
+.small .rows td:nth-child(2), .rows.small td:nth-child(2) { min-width: 12rem; }
+.appblock { display: grid; gap: 6px; margin-bottom: 18px; }
+.apptitle { font-size: 0.95rem; margin: 0; }
+.tablelink { font-size: 0.85rem; margin: 4px 0 0; }
+.sources { font-size: 0.8rem; }
+</style>
+
+</head>
+<body>
+
+<main>
+  <header class="col">
+    <span class="eyebrow">Panel study · US CEO departures 2005–2025 · working draft</span>
+    <h1>Does concentrated leadership amplify the market's reaction to CEO departures?</h1>
+    <p class="lede">I tested this on 739 CEO departures at US listed firms. I found no detectable effect. For performance-related dismissals the evidence rules out all but small effects. For misconduct-related departures there are too few cases to say anything either way.</p>
+    <div class="status">
+      <span class="pill warn">Exploratory · not peer reviewed</span>
+      <span class="pill">Rules fixed before outcomes were seen</span>
+    </div>
+    <nav class="toc" aria-label="Sections">
+      <a href="#why">1 Why</a><a href="#data">2 Data sources</a><a href="#sample">3 Sample</a>
+      <a href="#lc">4 Leadership concentration</a><a href="#reaction">5 Market reaction</a>
+      <a href="#test">6 The test</a><a href="#results">7 Results</a><a href="#checks">8 Checks</a>
+      <a href="#limits">9 Limitations</a><a href="#tables">Tables</a>
+    </nav>
+  </header>
+
+  <section class="col" id="why">
+    <span class="step">1 · WHY ASK THIS</span>
+    <h2>The question</h2>
+    <p>This study is part of a project on NVIDIA's share decline in October–November 2026, during which leadership news was one of several things moving the stock. A natural idea is that markets react more strongly to leadership news when a company depends heavily on one person. Before relying on that idea, I checked whether it holds across many past CEO departures.</p>
+    <p>I call the dependence on one person <b>leadership concentration (LC)</b>. My main measure counts two signals in the company's filings: the CEO is a <b>founder</b>, and the CEO is also <b>chair of the board</b>. LC is 0, ½ or 1, then standardised.</p>
+    <p>I tested two preregistered hypotheses, each against voluntary departures (retirements and planned exits) as the baseline:</p>
+    <ul>
+      <li><b>H1a:</b> when a CEO leaves over <b>misconduct</b>, the share price falls more at high-LC firms.</li>
+      <li><b>H1b:</b> when a CEO is dismissed for <b>poor performance</b>, replacing them helps high-LC firms less.</li>
+    </ul>
+  </section>
+
+  <section id="data">
+    <div class="col" style="display:grid;gap:16px">
+      <span class="step">2 · DATA SOURCES</span>
+      <h2>Where the data come from</h2>
+      <p>All inputs are public and were downloaded automatically by the project's scripts on 13–14 November 2026. Each download is logged with its date and a SHA-256 checksum.</p>
+    </div>
+    <div class="tablewrap">
+      <table class="sources">
+        <thead><tr><th>Data</th><th>Source and download route</th><th>What I used it for</th><th>Coverage</th></tr></thead>
+        <tbody>
+          <tr><td>CEO departures</td><td>Gentry et al. CEO Dismissal Database, archival version of 26 Nov 2025, downloaded as an Excel file from Zenodo: <code>zenodo.org/records/23328926</code> (CC BY 4.0)</td><td>The list of departures and their type: voluntary, performance or misconduct</td><td>S&amp;P 1500 firms; I used 2005–2025</td></tr>
+          <tr><td>Filing index and announcement 8-Ks</td><td>SEC EDGAR submissions API (<code>data.sec.gov/submissions</code>) and EDGAR archive (<code>sec.gov/Archives</code>), fetched with a rate limit of about 8 requests per second</td><td>Exact announcement dates (8-K Item 5.02) and earnings releases (Item 2.02)</td><td>2004–2026</td></tr>
+          <tr><td>Proxy statements and 10-Ks</td><td>EDGAR archive: the latest DEF 14A, or 10-K if there is none, accepted before the cut-off</td><td>Founder status, CEO-chair duality and executive titles</td><td>One document per event</td></tr>
+          <tr><td>Company–ticker map</td><td>SEC <code>sec.gov/files/company_tickers.json</code></td><td>Linking firms to stock tickers; remapping 8 subsidiary filers to their listed parents</td><td>Current listings</td></tr>
+          <tr><td>Financial statements</td><td>SEC XBRL API (<code>data.sec.gov/api/xbrl/companyconcept</code>), one request per firm and item</td><td>Sales, assets, cash, debt, equity and shares outstanding (financial-vulnerability check)</td><td>2009 on</td></tr>
+          <tr><td>Stock prices</td><td>Yahoo Finance through the open-source <code>yfinance</code> Python library</td><td>Daily closing prices, volume and splits for 775 tickers and SPY (S&amp;P 500 ETF)</td><td>1993–2026</td></tr>
+          <tr><td>Market stress inputs</td><td>VIX from Yahoo Finance (<code>^VIX</code>); BAA–10-year credit spread (<code>BAA10Y</code>) and the St. Louis Fed Financial Stress Index (<code>STLFSI4</code>) from FRED/ALFRED (<code>fred.stlouisfed.org</code>), with historical vintages</td><td>Market stress index, and checking it against the Fed's index</td><td>1994–2025</td></tr>
+          <tr><td>Trading calendar</td><td>The <code>exchange_calendars</code> Python library (NYSE, XNYS)</td><td>Counting trading sessions for every window</td><td>All dates</td></tr>
+          <tr><td>Successor field (coded, not downloaded)</td><td>Claude AI agents read each proxy statement under a fixed codebook; a second model re-coded a random 10% and all flagged cases</td><td>Whether another executive held a President or COO title (exploratory three-part measure only)</td><td>1,127 documents</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="sample">
+    <div class="col" style="display:grid;gap:16px">
+      <span class="step">3 · SAMPLE</span>
+      <h2>From the database to the 739 events I analyse</h2>
+      <p>Each step below removes events for a stated reason. The rules were fixed before any returns were computed.</p>
+    </div>
+    <div class="funnel col">
+      <div class="bar"><span>Departures of types voluntary, performance or misconduct, 2005–2025, with a dated announcement</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="n">1,663</span></div>
+      <div class="bar"><span>Firm can be priced on Yahoo Finance around the event</span><div class="track"><div class="fill" style="width:65.3%"></div></div><span class="n">1,086</span></div>
+      <div class="bar"><span>No earnings release in the three-day window</span><div class="track"><div class="fill" style="width:50.9%"></div></div><span class="n">847</span></div>
+      <div class="bar"><span>Leadership concentration measurable from filings</span><div class="track"><div class="fill" style="width:44.4%"></div></div><span class="n">739</span></div>
+    </div>
+    <div class="status col">
+      <span class="chip" style="--c: var(--vol)">voluntary 525</span>
+      <span class="chip" style="--c: var(--perf)">performance 191</span>
+      <span class="chip" style="--c: var(--mis)">misconduct 23</span>
+    </div>
+    <ul class="col">
+      <li><b>No price data (577 lost).</b> Most of these firms no longer trade under a current ticker. Recovering them would need licensed data (CRSP), which I did not have. The sample therefore leans toward firms that survived.</li>
+      <li><b>Earnings on the same days (239 lost).</b> When a departure is announced together with results, the price reaction mixes both pieces of news.</li>
+      <li><b>No usable filing (108 lost).</b> No proxy or 10-K before the cut-off, or the CEO's title could not be found in it.</li>
+    </ul>
+  </section>
+
+  <section id="lc">
+    <div class="col" style="display:grid;gap:16px">
+      <span class="step">4 · MEASURE 1</span>
+      <h2>Measuring leadership concentration</h2>
+      <p>For each departure I read the company's last proxy statement (or 10-K) filed at least 30 trading days before the announcement, so the measure cannot reflect the departure news itself. A rule-based text extractor finds the CEO's title (is the CEO also chair?) and biography (did the CEO found the company?).</p>
+      <p>I checked the extractor against hand-coded samples: founder status was right 92% of the time and duality 96%. The coders were AI models, not people, so this is not human validation. A third signal, whether a designated successor exists, could not be extracted reliably (81% accuracy against a 90% bar). It was coded by AI agents and enters only an exploratory three-part version of the measure.</p>
+    </div>
+    <figure>
+      <div class="plate"><img src="fig23_lc_by_type.png" alt="Bar charts of leadership concentration components and scores by departure type" loading="lazy"></div>
+      <figcaption><p>Leadership concentration by departure type, for all 1,086 price-matched departures (the sample before the earnings and filing exclusions). CEO-chair duality is most common in voluntary departures. Among the 23 misconduct cases in the final sample, only 2 have the highest LC2 score.</p><dl class="vars"><dt>T−30</dt><dd>The cut-off: 30 trading sessions before the trading day before the announcement. Only filings accepted before it are read, so the measure predates the news.</dd><dt>founder CEO</dt><dd>1 if the filing describes the departing CEO as a founder or co-founder of the company, else 0.</dd><dt>CEO-chair duality</dt><dd>1 if the CEO also holds the title chair (or chairman) of the board, else 0.</dd><dt>no designated successor</dt><dd>1 if no executive other than the CEO holds a company-level President or Chief Operating Officer title, else 0 (AI-coded; used only in LC3).</dd><dt>% = 1</dt><dd>Left panel: share of departures of each type for which the flag equals 1.</dd><dt>LC2 raw score</dt><dd>Mean of founder CEO and CEO-chair duality: 0, 0.5 or 1. The main measure; standardised (z-score) in the regressions.</dd><dt>LC3 raw score</dt><dd>Mean of all three flags: 0, 0.33, 0.67 or 1. The originally planned measure, now exploratory.</dd><dt>share of events (%)</dt><dd>Middle and right panels: percentage of each type's departures at each score value.</dd><dt>n</dt><dd>Number of departures of each type, in the legend.</dd><dt>voluntary / performance / misconduct (colours)</dt><dd>Departure type from the Gentry et al. database: voluntary = retirement or planned exit (codes 5–6, green); performance = dismissed for poor performance (code 3, blue); misconduct = left over legal or ethical issues (code 4, orange).</dd></dl></figcaption>
+    </figure>
+  </section>
+
+  <section class="col" id="reaction">
+    <span class="step">5 · MEASURE 2</span>
+    <h2>Measuring the market reaction</h2>
+    <p>The outcome is the <b>abnormal return</b> over three trading days around the announcement (day −1 to day +1), written CAR[−1,+1]. It is the stock's return minus what the stock would normally have done, given the market (SPY) and its industry that day.</p>
+    <p>"Normal" behaviour is estimated for each stock from roughly one year of prices ending six weeks before the event. I picked this model from four candidates by testing them on 5,000 random dates with no event before 2015. The chosen model flagged 4.7% of those dates as unusual at the 5% level, close to what it should.</p>
+    <p>Average three-day reactions: voluntary <b>−0.6%</b>, performance <b>−1.8%</b>, misconduct <b>−6.2%</b>.</p>
+  </section>
+
+  <section id="test">
+    <div class="col" style="display:grid;gap:16px">
+      <span class="step">6 · THE TEST</span>
+      <h2>How the hypotheses were tested</h2>
+      <p>I regressed each departure's abnormal return on its type, its leadership concentration and their interaction. Controls: the stock's normal volatility, firm size, the prior two-month return, CEO tenure, whether the exit was planned, whether a successor was named, industry and calendar month. H1a and H1b are the two interaction terms.</p>
+      <p><b>Safeguard.</b> All returns were computed and then sealed with checksums. I did not look at them until the full test, its power and its decision rules were frozen.</p>
+      <p><b>One change, made before seeing outcomes.</b> I simulated outcomes with no true effect. The preregistered standard errors flagged a false H1a effect about 20% of the time instead of 5%, because only a handful of misconduct cases drive that term. I switched to a more robust jackknife version (CR3), which was close to 5% in the same simulation.</p>
+    </div>
+    <figure>
+      <div class="plate"><img src="fig28_power_full_design.png" alt="Power curves for H1a and H1b" loading="lazy"></div>
+      <figcaption><p>How large an effect the test could detect. The curves come from simulated outcomes built on the real sample (types, months, LC values, controls and each stock's own volatility) with a known effect added. With 23 misconduct cases, H1a needs an effect of about 6–12 pp per SD to be found 80% of the time; H1b about 1.6–3.2.</p><dl class="vars"><dt>true effect</dt><dd>Horizontal axis: the effect size built into the simulated outcomes, in pp of CAR[−1,+1] per SD of LC, in the predicted (negative) direction.</dd><dt>power</dt><dd>Vertical axis: share of 2,000 simulations in which the test rejects with a negative estimate, at the first-step Holm threshold (alpha 0.025).</dd><dt>80% line</dt><dd>The usual target power. Where a curve crosses it is the minimum detectable effect (MDE).</dd><dt>LC2 (blue), LC3 (orange)</dt><dd>The main and the exploratory leadership measure (see the figure in section 4).</dd><dt>variance ×1.00 / ×2.25 / ×4.00 (solid, dashed, dotted)</dt><dd>Assumed announcement-day noise relative to normal-day noise. Announcement days are usually noisier, so larger multipliers are more realistic; ×2.25 is the main assumption.</dd><dt>H1a misconduct:LC, H1b performance:LC</dt><dd>The two tested interaction terms; n = departures of that type with LC2.</dd><dt>CAR[−1,+1]</dt><dd>Cumulative abnormal return: the stock's return over the trading day before, the day of and the day after the announcement, minus the return its normal-return model predicts from the market (SPY) and its industry. Log points, shown in percent.</dd></dl></figcaption><p class="tablelink"><a href="#tab-a1">Table A1 at the end of the page</a> lists the numbers.</p>
+    </figure>
+  </section>
+
+  <section id="results">
+    <div class="col" style="display:grid;gap:16px">
+      <span class="step">7 · RESULTS</span>
+      <h2>What I found</h2>
+    </div>
+    <div class="verdicts">
+      <div class="card">
+        <div class="row"><h3>H1a · misconduct</h3><span class="pill">inconclusive</span></div>
+        <div class="big">−2.9 pp</div>
+        <div class="ci">95% CI [−22.3, +16.4] · n = 23 misconduct</div>
+        <p class="muted">The interval covers large drops, no effect and large gains. Too few cases to tell. This is not evidence of no effect.</p>
+      </div>
+      <div class="card">
+        <div class="row"><h3>H1b · performance</h3><span class="pill">inconclusive</span></div>
+        <div class="big">−0.4 pp</div>
+        <div class="ci">95% CI [−2.5, +1.7] · n = 191 performance</div>
+        <p class="muted">Close to zero. Effects larger than about 2.5 points per standard deviation are effectively ruled out.</p>
+      </div>
+    </div>
+    <p class="muted col">Each estimate is the extra three-day abnormal return per standard deviation of leadership concentration, relative to voluntary departures, in percentage points. Both p-values are 1.00 after the Holm correction for two tests.</p>
+    <figure>
+      <div class="plate"><img src="fig29_coefficients.png" alt="Coefficient plot across primary and robustness specifications" loading="lazy"></div>
+      <figcaption><p>The main estimate and its preregistered variations. Every point is slightly negative and every interval includes zero, so both hypotheses are inconclusive.</p><dl class="vars"><dt>P (primary, CR3)</dt><dd>The main specification: LC2 measured at T−30, event-month fixed effects, 739 departures.</dd><dt>lc_ex_founder</dt><dd>Same, with CEO-chair duality alone as the measure (founder flag dropped).</dd><dt>lag_60, lag_90</dt><dd>LC2 read from filings accepted before 60 or 90 trading sessions ahead of the event, instead of 30.</dd><dt>quarter_fe_plus_msi</dt><dd>Calendar-quarter instead of month fixed effects, plus the market stress index (MSI) and its interaction with departure type.</dd><dt>common_support_subset</dt><dd>Drops LC2 values with fewer than 2 departures of some type (nothing was dropped here).</dd><dt>X LC3 (exploratory)</dt><dd>The originally planned three-flag measure, including the AI-coded successor flag.</dd><dt>−MDE (dashed line)</dt><dd>Minus the minimum detectable effect: 8.67 pp (H1a) and 2.43 pp (H1b). If a whole interval lies to its right, the hypothesis is rated not supported.</dd><dt>inconclusive (title)</dt><dd>The frozen verdict: neither supported (negative and significant after Holm correction) nor ruled out.</dd><dt>pp per SD of LC</dt><dd>Percentage points of CAR[−1,+1] for a one-standard-deviation increase in leadership concentration. Negative = a larger price drop at more concentrated firms.</dd><dt>95% CI, CR3</dt><dd>Horizontal bars are 95% confidence intervals from jackknife (CR3) standard errors clustered by event month, the test that decides the verdicts.</dd><dt>misconduct:LC, performance:LC</dt><dd>The interaction terms that test H1a and H1b: how much more the reaction to a misconduct or performance departure changes with LC than the reaction to a voluntary departure does.</dd></dl></figcaption>
+    </figure>
+    <figure>
+      <div class="plate"><img src="fig30_car_by_lc.png" alt="Mean abnormal return by LC score and departure type" loading="lazy"></div>
+      <figcaption><p>Raw averages, before any controls. The two misconduct cases at the highest score average about −25%, but two cases cannot carry a conclusion.</p><dl class="vars"><dt>LC2 raw score</dt><dd>Horizontal axis: (founder CEO + CEO-chair duality) / 2, so 0, 0.5 or 1. Points are offset slightly so they do not overlap.</dd><dt>mean CAR[−1,+1], %</dt><dd>Vertical axis: average three-day abnormal return of the departures at that score.</dd><dt>error bars</dt><dd>95% confidence interval of the mean (±1.96 standard errors).</dd><dt>n</dt><dd>Number of departures behind each point.</dd><dt>CAR[−1,+1]</dt><dd>Cumulative abnormal return: the stock's return over the trading day before, the day of and the day after the announcement, minus the return its normal-return model predicts from the market (SPY) and its industry. Log points, shown in percent.</dd><dt>voluntary / performance / misconduct (colours)</dt><dd>Departure type from the Gentry et al. database: voluntary = retirement or planned exit (codes 5–6, green); performance = dismissed for poor performance (code 3, blue); misconduct = left over legal or ethical issues (code 4, orange).</dd></dl></figcaption>
+    </figure>
+  </section>
+
+  <section id="checks">
+    <div class="col" style="display:grid;gap:16px">
+      <span class="step">8 · CHECKS</span>
+      <h2>Do the results hold up?</h2>
+      <p>I repeated the test with every variation listed in advance: different ways of coding the successor field, dropping uncertain cases, other measurement dates, and each signal on its own. I also tested whether financial weakness or market-wide stress plays the role leadership concentration was supposed to.</p>
+    </div>
+    <figure>
+      <div class="plate"><img src="fig31_a4_rows.png" alt="Estimates across sensitivity and exploratory variations" loading="lazy"></div>
+      <figcaption><p>Every variation agrees: the performance estimate stays near zero, and the misconduct estimate is never precise enough to interpret. Rows starting with P use LC2; rows starting with X use the exploratory LC3.</p><dl class="vars"><dt>n</dt><dd>Departures used in that row.</dd><dt>pp per SD of LC</dt><dd>Percentage points of CAR[−1,+1] for a one-standard-deviation increase in leadership concentration. Negative = a larger price drop at more concentrated firms.</dd><dt>95% CI, CR3</dt><dd>Horizontal bars are 95% confidence intervals from jackknife (CR3) standard errors clustered by event month, the test that decides the verdicts.</dd><dt>misconduct:LC, performance:LC</dt><dd>The interaction terms that test H1a and H1b: how much more the reaction to a misconduct or performance departure changes with LC than the reaction to a voluntary departure does.</dd></dl></figcaption><p class="tablelink"><a href="#tab-a2">Table A2 at the end of the page</a> lists the numbers.</p>
+    </figure>
+    <figure>
+      <div class="plate"><img src="fig32_secondary.png" alt="Estimates for financial vulnerability, market stress and other secondary tests" loading="lazy"></div>
+      <figcaption><p>Secondary tests, each with its own moderator in place of LC. One of 21 crosses the significance line: financially weaker firms reacted less negatively to performance dismissals (+2.0 points), the opposite of amplification. It disappears in the two sensitivity rows at the bottom, so I treat it as noise until shown otherwise. Families F1–F5 are each corrected for multiple tests separately (Holm).</p><dl class="vars"><dt>M</dt><dd>The moderator named in the row. misconduct:M and performance:M are its interactions with departure type, read like misconduct:LC and performance:LC.</dd><dt>colours</dt><dd>Orange = misconduct term, blue = performance term, grey = combined contrasts.</dd><dt>horizontal axis</dt><dd>pp of CAR[−1,+1] per SD of the moderator, with 95% CR3 intervals. The axis is cut at ±25, so very wide intervals run off the edge.</dd><dt>CAR[−1,+1]</dt><dd>Cumulative abnormal return: the stock's return over the trading day before, the day of and the day after the announcement, minus the return its normal-return model predicts from the market (SPY) and its industry. Log points, shown in percent.</dd></dl></figcaption><p class="tablelink"><a href="#tab-a3">Table A3 at the end of the page</a> lists the numbers.</p>
+    </figure>
+  </section>
+
+  <section class="col" id="limits">
+    <span class="step">9 · LIMITATIONS</span>
+    <h2>What to keep in mind</h2>
+    <ul>
+      <li><b>Few misconduct cases.</b> 23 in total, about 17 informative. The misconduct question stays open.</li>
+      <li><b>Survivor bias.</b> 577 departures could not be priced, mostly at firms no longer listed.</li>
+      <li><b>Machine-coded measures.</b> Founder and duality come from a text extractor checked against AI coders, not human ones. An AI audit found about 30 missed duality flags among 48 flagged cases. The main measure also replaces the originally planned three-part measure (a disclosed change).</li>
+      <li><b>Departure types come from media coverage.</b> On announcement-day filings alone, only 19 of 53 misconduct cases read as misconduct.</li>
+      <li><b>Earnings overlap.</b> 22% of departures were dropped because results came out the same days, and they may differ from the rest.</li>
+    </ul>
+  </section>
+
+  <section class="col" id="tables">
+    <span class="step">APPENDIX · TABLES</span>
+    <h2>Tables behind the figures</h2>
+    <div class="appblock"><h3 class="apptitle" id="tab-a1">Table A1 · minimum detectable effects (power figure, section 6)</h3><p class="tabletitle">Minimum detectable effect at 80% power (pp of CAR[−1,+1] per SD of LC; CR3 test, Holm first step α = 0.025)</p><div class="tablewrap rows small"><table><thead><tr><th>Term and measure</th><th>noise ×1</th><th>noise ×2.25 (main)</th><th>noise ×4</th></tr></thead><tbody><tr><td>H1a misconduct, LC2 (main)</td><td class="num">6.0</td><td class="num"><b>8.7</b></td><td class="num">12.0</td></tr><tr><td>H1b performance, LC2 (main)</td><td class="num">1.6</td><td class="num"><b>2.4</b></td><td class="num">3.2</td></tr><tr><td>H1a misconduct, LC3 (exploratory)</td><td class="num">5.1</td><td class="num"><b>7.8</b></td><td class="num">10.4</td></tr><tr><td>H1b performance, LC3 (exploratory)</td><td class="num">1.3</td><td class="num"><b>2.0</b></td><td class="num">2.6</td></tr></tbody></table></div><p class="tablenote">Read: with the main noise assumption, the test finds a misconduct effect 80% of the time only if it is about 8.7 pp per SD; a performance effect, about 2.4 pp. The bold values became the frozen MDEs, drawn as dashed lines in the results figure.</p></div>
+    <div class="appblock"><h3 class="apptitle" id="tab-a2">Table A2 · every row of the robustness figure (section 8)</h3><p class="tabletitle">Each row of the figure (estimates in pp per SD, 95% CR3 interval)</p><div class="tablewrap rows small"><table><thead><tr><th>Row</th><th>What changes</th><th>n (misconduct)</th><th>H1a misconduct × LC</th><th>H1b performance × LC</th></tr></thead><tbody><tr><td><code>P</code></td><td>Nothing changed: the main result (LC2).</td><td class="num">739 (23)</td><td class="num">−2.91 [−22.25, +16.42]</td><td class="num">−0.43 [−2.54, +1.69]</td></tr><tr><td><code>P-EV</code></td><td>Only departures whose founder and duality evidence was found and checked in the original filing.</td><td class="num">671 (21)</td><td class="num">+0.97 [−65.14, +67.09]</td><td class="num">+0.11 [−1.02, +1.23]</td></tr><tr><td><code>P-S1 duality</code></td><td>LC2 with the CEO-chair flag only (founder removed).</td><td class="num">739 (23)</td><td class="num">−0.95 [−17.35, +15.46]</td><td class="num">−0.15 [−1.88, +1.58]</td></tr><tr><td><code>P-S2 founder</code></td><td>LC2 with the founder flag only.</td><td class="num">739 (23)</td><td class="num">−8.45 [−79.13, +62.22]</td><td class="num">−0.70 [−3.01, +1.60]</td></tr><tr><td><code>P-S3 L60</code></td><td>LC2 from filings at least 60 trading days before the event (instead of 30).</td><td class="num">739 (23)</td><td class="num">−3.13 [−22.64, +16.38]</td><td class="num">−0.34 [−2.46, +1.77]</td></tr><tr><td><code>P-S3 L90</code></td><td>LC2 from filings at least 90 trading days before the event.</td><td class="num">739 (23)</td><td class="num">−3.41 [−22.97, +16.16]</td><td class="num">−0.26 [−2.33, +1.80]</td></tr><tr><td><code>X</code></td><td>LC3 with the AI coders' final successor codes.</td><td class="num">734 (23)</td><td class="num">−1.24 [−10.42, +7.94]</td><td class="num">−0.10 [−1.60, +1.40]</td></tr><tr><td><code>X-CC</code></td><td>LC3 without cases of insufficient successor evidence (U1) or doubtful CEO status (CE).</td><td class="num">706 (22)</td><td class="num">−1.25 [−10.55, +8.05]</td><td class="num">−0.27 [−1.86, +1.31]</td></tr><tr><td><code>X-F0</code></td><td>LC3 with insufficient-evidence cases set to 'no other President or COO'.</td><td class="num">729 (23)</td><td class="num">−1.23 [−10.37, +7.91]</td><td class="num">−0.13 [−1.65, +1.39]</td></tr><tr><td><code>X-F1</code></td><td>LC3 with insufficient-evidence cases set to 'another President or COO exists'.</td><td class="num">729 (23)</td><td class="num">−1.76 [−9.10, +5.59]</td><td class="num">−0.22 [−1.75, +1.30]</td></tr><tr><td><code>X-AQ1-I</code></td><td>AQ1, a COO who is also a vice president ('EVP and COO'), counted as second-in-command.</td><td class="num">734 (23)</td><td class="num">−1.22 [−10.48, +8.04]</td><td class="num">+0.07 [−1.43, +1.58]</td></tr><tr><td><code>X-AQ1-E</code></td><td>AQ1 not counted.</td><td class="num">734 (23)</td><td class="num">−1.08 [−9.72, +7.56]</td><td class="num">−0.10 [−1.52, +1.31]</td></tr><tr><td><code>X-AQ2-I</code></td><td>AQ2, a COO of one unit or region ('COO, North America'), counted.</td><td class="num">734 (23)</td><td class="num">−1.28 [−8.24, +5.68]</td><td class="num">−0.22 [−1.78, +1.33]</td></tr><tr><td><code>X-AQ2-E</code></td><td>AQ2 not counted.</td><td class="num">734 (23)</td><td class="num">−1.23 [−10.40, +7.93]</td><td class="num">−0.09 [−1.59, +1.42]</td></tr><tr><td><code>X-AQ3-I</code></td><td>AQ3, a President of a function ('President, Finance'), counted.</td><td class="num">734 (23)</td><td class="num">−1.78 [−16.23, +12.67]</td><td class="num">−0.34 [−1.86, +1.17]</td></tr><tr><td><code>X-AQ3-E</code></td><td>AQ3 not counted.</td><td class="num">734 (23)</td><td class="num">−1.23 [−10.41, +7.94]</td><td class="num">−0.09 [−1.60, +1.41]</td></tr><tr><td><code>X-AQ4-I</code></td><td>AQ4, an operations head without a President or COO title ('EVP Operations'), counted.</td><td class="num">734 (23)</td><td class="num">−2.15 [−9.35, +5.05]</td><td class="num">−0.52 [−2.12, +1.08]</td></tr><tr><td><code>X-AQ4-E</code></td><td>AQ4 not counted.</td><td class="num">734 (23)</td><td class="num">−1.23 [−10.42, +7.96]</td><td class="num">−0.08 [−1.58, +1.41]</td></tr><tr><td><code>X-U</code></td><td>LC3 without any uncertain case (U1 insufficient, U2 low confidence, U3 quote not found, U4 ambiguous title, U5 coders disagreed, CE doubtful CEO).</td><td class="num">174 (3)</td><td class="num">+4.30 [−1.69, +10.29]</td><td class="num">−0.81 [−5.75, +4.14]</td></tr><tr><td><code>X-S1</code></td><td>LC3 without the founder flag (successor + duality).</td><td class="num">734 (23)</td><td class="num">+1.65 [−2.71, +6.02]</td><td class="num">+0.15 [−1.23, +1.53]</td></tr><tr><td><code>X-S3 L60</code></td><td>LC3 from filings at least 60 trading days before the event.</td><td class="num">734 (23)</td><td class="num">−1.44 [−10.76, +7.88]</td><td class="num">−0.03 [−1.51, +1.45]</td></tr><tr><td><code>X-S3 L90</code></td><td>LC3 from filings at least 90 trading days before the event.</td><td class="num">735 (23)</td><td class="num">−1.60 [−11.00, +7.80]</td><td class="num">−0.17 [−1.63, +1.30]</td></tr></tbody></table></div></div>
+    <div class="appblock"><h3 class="apptitle" id="tab-a3">Table A3 · every row of the secondary-tests figure (section 8)</h3><p class="tabletitle">Each row of the figure. M = the measure named in the row; a Holm family is a group of tests corrected together for multiple testing</p><div class="tablewrap rows small"><table><thead><tr><th>Family</th><th>Label</th><th>Measure</th><th>Term</th><th>n</th><th>Estimate [95% CI], pp per SD</th><th>p</th><th>Holm p (family)</th></tr></thead><tbody><tr><td>F1 financial (2 tests)</td><td><code>FIN</code></td><td>Financial vulnerability index (2009 on), average of the four F2 ranks; higher = more stretched</td><td>performance × M</td><td class="num">407</td><td class="num">+2.00 [+0.26, +3.73]</td><td class="num">0.024</td><td class="num">0.048</td></tr><tr><td>F1 financial (2 tests)</td><td><code>FIN</code></td><td>Financial vulnerability index (2009 on), average of the four F2 ranks; higher = more stretched</td><td>misconduct × M</td><td class="num">407</td><td class="num">+3.48 [−4.89, +11.85]</td><td class="num">0.412</td><td class="num">0.412</td></tr><tr><td>F2 financial parts (8 tests)</td><td><code>ev_to_sales_rel</code></td><td>Log(enterprise value / sales) minus its industry-year median</td><td>performance × M</td><td class="num">436</td><td class="num">+2.11 [−0.65, +4.86]</td><td class="num">0.132</td><td class="num">1.000</td></tr><tr><td>F2 financial parts (8 tests)</td><td><code>ev_to_sales_rel</code></td><td>Log(enterprise value / sales) minus its industry-year median</td><td>misconduct × M</td><td class="num">436</td><td class="num">+3.75 [−2.21, +9.70]</td><td class="num">0.216</td><td class="num">1.000</td></tr><tr><td>F2 financial parts (8 tests)</td><td><code>net_debt_to_assets</code></td><td>(Debt − cash) / assets</td><td>performance × M</td><td class="num">563</td><td class="num">+0.82 [−0.66, +2.29]</td><td class="num">0.277</td><td class="num">1.000</td></tr><tr><td>F2 financial parts (8 tests)</td><td><code>net_debt_to_assets</code></td><td>(Debt − cash) / assets</td><td>misconduct × M</td><td class="num">563</td><td class="num">+1.38 [−3.10, +5.86]</td><td class="num">0.543</td><td class="num">1.000</td></tr><tr><td>F2 financial parts (8 tests)</td><td><code>cash_to_assets</code></td><td>Cash / assets</td><td>performance × M</td><td class="num">707</td><td class="num">−0.87 [−2.57, +0.82]</td><td class="num">0.310</td><td class="num">1.000</td></tr><tr><td>F2 financial parts (8 tests)</td><td><code>cash_to_assets</code></td><td>Cash / assets</td><td>misconduct × M</td><td class="num">707</td><td class="num">−1.72 [−7.63, +4.18]</td><td class="num">0.565</td><td class="num">1.000</td></tr><tr><td>F2 financial parts (8 tests)</td><td><code>market_to_book (log)</code></td><td>Log(market value / book equity)</td><td>performance × M</td><td class="num">631</td><td class="num">−0.19 [−1.36, +0.99]</td><td class="num">0.757</td><td class="num">1.000</td></tr><tr><td>F2 financial parts (8 tests)</td><td><code>market_to_book (log)</code></td><td>Log(market value / book equity)</td><td>misconduct × M</td><td class="num">631</td><td class="num">−0.38 [−14.40, +13.64]</td><td class="num">0.957</td><td class="num">1.000</td></tr><tr><td>F3 leadership parts (6 tests)</td><td><code>founder_ceo</code></td><td>Founder flag alone</td><td>performance × M</td><td class="num">734</td><td class="num">−0.63 [−3.11, +1.84]</td><td class="num">0.615</td><td class="num">1.000</td></tr><tr><td>F3 leadership parts (6 tests)</td><td><code>founder_ceo</code></td><td>Founder flag alone</td><td>misconduct × M</td><td class="num">734</td><td class="num">−8.10 [−265.25, +249.05]</td><td class="num">0.951</td><td class="num">1.000</td></tr><tr><td>F3 leadership parts (6 tests)</td><td><code>ceo_chair_duality</code></td><td>CEO-chair flag alone</td><td>performance × M</td><td class="num">734</td><td class="num">−0.12 [−1.86, +1.62]</td><td class="num">0.892</td><td class="num">1.000</td></tr><tr><td>F3 leadership parts (6 tests)</td><td><code>ceo_chair_duality</code></td><td>CEO-chair flag alone</td><td>misconduct × M</td><td class="num">734</td><td class="num">−0.88 [−17.48, +15.72]</td><td class="num">0.917</td><td class="num">1.000</td></tr><tr><td>F3 leadership parts (6 tests)</td><td><code>no_designated_successor</code></td><td>Successor flag alone (AI-coded)</td><td>performance × M</td><td class="num">734</td><td class="num">+0.32 [−1.28, +1.92]</td><td class="num">0.696</td><td class="num">1.000</td></tr><tr><td>F3 leadership parts (6 tests)</td><td><code>no_designated_successor</code></td><td>Successor flag alone (AI-coded)</td><td>misconduct × M</td><td class="num">734</td><td class="num">+1.92 [−7.12, +10.97]</td><td class="num">0.675</td><td class="num">1.000</td></tr><tr><td>F4 market stress (2 tests)</td><td><code>MSI</code></td><td>Market stress index the day before the window</td><td>performance × M</td><td class="num">847</td><td class="num">−0.25 [−3.09, +2.60]</td><td class="num">0.865</td><td class="num">1.000</td></tr><tr><td>F4 market stress (2 tests)</td><td><code>MSI</code></td><td>Market stress index the day before the window</td><td>misconduct × M</td><td class="num">847</td><td class="num">−0.10 [−5.19, +4.98]</td><td class="num">0.968</td><td class="num">1.000</td></tr><tr><td>F5 LC2 extras (3 tests)</td><td><code>pooled dismissal contrast</code></td><td>Weighted average of the misconduct and performance LC2 effects</td><td>pooled</td><td class="num">739</td><td class="num">−0.69 [−3.37, +1.99]</td><td class="num">0.611</td><td class="num">1.000</td></tr><tr><td>F5 LC2 extras (3 tests)</td><td><code>equality d_M - d_P</code></td><td>Misconduct LC2 effect minus performance LC2 effect</td><td>difference</td><td class="num">739</td><td class="num">−2.49 [−22.13, +17.15]</td><td class="num">0.803</td><td class="num">1.000</td></tr><tr><td>F5 LC2 extras (3 tests)</td><td><code>ordinal score x LC2</code></td><td>One LC2 slope across severity (voluntary 0, performance 1, misconduct 2)</td><td>ordinal × LC2</td><td class="num">739</td><td class="num">−0.75 [−3.10, +1.60]</td><td class="num">0.531</td><td class="num">1.000</td></tr><tr><td>F1 sensitivity (no Holm)</td><td><code>FIN zero-debt</code></td><td>FIN with missing debt set to 0</td><td>performance × M</td><td class="num">511</td><td class="num">+1.09 [−0.78, +2.96]</td><td class="num">0.250</td><td class="num">—</td></tr><tr><td>F1 sensitivity (no Holm)</td><td><code>FIN zero-debt</code></td><td>FIN with missing debt set to 0</td><td>misconduct × M</td><td class="num">511</td><td class="num">+2.40 [−5.26, +10.06]</td><td class="num">0.536</td><td class="num">—</td></tr><tr><td>F1 sensitivity (no Holm)</td><td><code>FIN ex SIC 60-67</code></td><td>FIN without banks and other financial firms</td><td>performance × M</td><td class="num">353</td><td class="num">+1.69 [−0.42, +3.80]</td><td class="num">0.115</td><td class="num">—</td></tr><tr><td>F1 sensitivity (no Holm)</td><td><code>FIN ex SIC 60-67</code></td><td>FIN without banks and other financial firms</td><td>misconduct × M</td><td class="num">353</td><td class="num">+2.14 [−4.82, +9.11]</td><td class="num">0.544</td><td class="num">—</td></tr></tbody></table></div></div>
+  </section>
+
+  <footer>
+    <p>Secondary study within a larger project on NVIDIA's Oct–Nov 2026 share decline. These panel results do not feed the NVIDIA analysis, which has its own frozen design and has not yet been run.</p>
+    <p>All numbers come from the project's report files and decision log. Data retrieved 13–14 November 2026.</p>
+  </footer>
+</main>
+</body>
+</html>
